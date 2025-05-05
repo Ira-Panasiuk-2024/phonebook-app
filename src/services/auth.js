@@ -54,13 +54,15 @@ export const loginUser = async (payload) => {
   const accessToken = randomBytes(30).toString('base64');
   const refreshToken = randomBytes(30).toString('base64');
 
-  return await SessionsCollection.create({
+  const session = await SessionsCollection.create({
     userId: user._id,
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
     refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   });
+
+  return { user, session };
 };
 
 export const logoutUser = async (sessionId) => {
@@ -100,10 +102,17 @@ export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
 
   await SessionsCollection.deleteOne({ _id: sessionId, refreshToken });
 
-  return await SessionsCollection.create({
+  const user = await UsersCollection.findById(session.userId);
+  if (!user) {
+    throw createHttpError(404, 'User not found during session refresh');
+  }
+
+  const updatedSession = await SessionsCollection.create({
     userId: session.userId,
     ...newSession,
   });
+
+  return { user, session: updatedSession };
 };
 
 export const requestResetToken = async (email) => {
