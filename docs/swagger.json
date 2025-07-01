@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "https://contacts-app-5c5h.onrender.com",
+      "url": "https://phonebook-app-j9nn.onrender.com",
       "description": "Production server"
     },
     {
