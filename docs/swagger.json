@@ -37,7 +37,7 @@
         ],
         "summary": "Get list of contacts",
         "operationId": "getContacts",
-        "description": "Get list of user's contacts",
+        "description": "Get list of user's contacts with pagination, sorting, filtering and search",
         "security": [
           {
             "bearerAuth": []
@@ -49,16 +49,21 @@
             "name": "page",
             "schema": {
               "type": "integer",
-              "example": 1
-            }
+              "example": 1,
+              "minimum": 1
+            },
+            "description": "Page number for pagination"
           },
           {
             "in": "query",
             "name": "perPage",
             "schema": {
               "type": "integer",
-              "example": 10
-            }
+              "example": 10,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Number of items per page"
           },
           {
             "in": "query",
@@ -66,28 +71,40 @@
             "schema": {
               "type": "string",
               "enum": [
-                "acs",
+                "asc",
                 "desc"
-              ]
-            }
+              ],
+              "default": "asc"
+            },
+            "description": "Sort order (ascending or descending)"
           },
           {
             "in": "query",
             "name": "sortBy",
             "schema": {
               "type": "string",
-              "example": "contactType",
-              "description": "All contact's fields can be mentioned. Default value - _id"
-            }
+              "enum": [
+                "name",
+                "phoneNumber",
+                "email",
+                "contactType",
+                "isFavourite",
+                "createdAt",
+                "updatedAt"
+              ],
+              "default": "phoneNumber",
+              "example": "contactType"
+            },
+            "description": "Field to sort by. Default value - phoneNumber"
           },
           {
             "in": "query",
             "name": "isFavourite",
             "schema": {
               "type": "boolean",
-              "example": false,
-              "description": "Filter contacts by isFavourite field value"
-            }
+              "example": false
+            },
+            "description": "Filter contacts by isFavourite field value"
           },
           {
             "in": "query",
@@ -100,7 +117,17 @@
                 "personal"
               ],
               "example": "home"
-            }
+            },
+            "description": "Filter contacts by contact type"
+          },
+          {
+            "in": "query",
+            "name": "query",
+            "schema": {
+              "type": "string",
+              "example": "John"
+            },
+            "description": "Search query to filter contacts by name, phone number, or email"
           }
         ],
         "responses": {
@@ -144,27 +171,33 @@
                         },
                         "page": {
                           "type": "integer",
-                          "example": 1
+                          "example": 1,
+                          "description": "Current page number"
                         },
                         "perPage": {
                           "type": "integer",
-                          "example": 10
+                          "example": 10,
+                          "description": "Number of items per page"
                         },
                         "totalItems": {
                           "type": "integer",
-                          "example": 10
+                          "example": 10,
+                          "description": "Total number of contacts"
                         },
                         "totalPages": {
                           "type": "integer",
-                          "example": 15
+                          "example": 15,
+                          "description": "Total number of pages"
                         },
                         "hasNextPage": {
                           "type": "boolean",
-                          "example": true
+                          "example": true,
+                          "description": "Whether there is a next page"
                         },
                         "hasPreviousPage": {
                           "type": "boolean",
-                          "example": false
+                          "example": false,
+                          "description": "Whether there is a previous page"
                         }
                       }
                     }
@@ -172,6 +205,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"

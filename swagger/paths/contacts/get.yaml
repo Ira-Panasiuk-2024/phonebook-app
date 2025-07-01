@@ -2,7 +2,7 @@ tags:
   - Contacts
 summary: Get list of contacts
 operationId: getContacts
-description: Get list of user's contacts
+description: Get list of user's contacts with pagination, sorting, filtering and search
 security:
   - bearerAuth: []
 parameters:
@@ -11,34 +11,59 @@ parameters:
     schema:
       type: integer
       example: 1
+      minimum: 1
+    description: Page number for pagination
   - in: query
     name: perPage
     schema:
       type: integer
       example: 10
+      minimum: 1
+      maximum: 100
+    description: Number of items per page
   - in: query
     name: sortOrder
     schema:
       type: string
-      enum: ['acs', 'desc']
+      enum: ['asc', 'desc']
+      default: 'asc'
+    description: Sort order (ascending or descending)
   - in: query
     name: sortBy
     schema:
       type: string
+      enum:
+        [
+          'name',
+          'phoneNumber',
+          'email',
+          'contactType',
+          'isFavourite',
+          'createdAt',
+          'updatedAt',
+        ]
+      default: 'phoneNumber'
       example: 'contactType'
-      description: "All contact's fields can be mentioned. Default value - _id"
+    description: Field to sort by. Default value - phoneNumber
   - in: query
     name: isFavourite
     schema:
       type: boolean
       example: false
-      description: 'Filter contacts by isFavourite field value'
+    description: Filter contacts by isFavourite field value
   - in: query
     name: contactType
     schema:
       type: string
       enum: ['work', 'home', 'personal']
       example: 'home'
+    description: Filter contacts by contact type
+  - in: query
+    name: query
+    schema:
+      type: string
+      example: 'John'
+    description: Search query to filter contacts by name, phone number, or email
 responses:
   '200':
     description: 'Successfully found contacts!'
@@ -75,21 +100,29 @@ responses:
                 page:
                   type: integer
                   example: 1
+                  description: Current page number
                 perPage:
                   type: integer
                   example: 10
+                  description: Number of items per page
                 totalItems:
                   type: integer
                   example: 10
+                  description: Total number of contacts
                 totalPages:
                   type: integer
                   example: 15
+                  description: Total number of pages
                 hasNextPage:
                   type: boolean
                   example: true
+                  description: Whether there is a next page
                 hasPreviousPage:
                   type: boolean
                   example: false
+                  description: Whether there is a previous page
+  '400':
+    $ref: ../../components/responses/400.yaml
   '401':
     $ref: '../../components/responses/401.yaml'
   '500':
