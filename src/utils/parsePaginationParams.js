@@ -1,5 +1,5 @@
 const parseNumber = (value, defaultValue) => {
-  if (typeof value === 'undefined') {
+  if (typeof value === 'undefined' || value === null || value === '') {
     return defaultValue;
   }
 
