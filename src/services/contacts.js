@@ -10,6 +10,7 @@ export const getAllContacts = async ({
   sortOrder = SORT_ORDER.ASC,
   sortBy = 'phoneNumber',
   filter = {},
+  query = '',
   userId,
 }) => {
   const limit = perPage;
@@ -25,8 +26,16 @@ export const getAllContacts = async ({
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
+  if (query) {
+    contactsQuery.or([
+      { name: { $regex: query, $options: 'i' } },
+      { phoneNumber: { $regex: query, $options: 'i' } },
+      { email: { $regex: query, $options: 'i' } },
+    ]);
+  }
+
   const [contactsCount, contacts] = await Promise.all([
-    ContactsCollection.find().merge(contactsQuery).countDocuments(),
+    contactsQuery.clone().countDocuments(),
     contactsQuery
       .skip(skip)
       .limit(limit)
