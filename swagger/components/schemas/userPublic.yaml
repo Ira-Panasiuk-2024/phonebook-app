@@ -3,7 +3,6 @@ required:
   - _id
   - name
   - email
-  - password
 properties:
   _id:
     description: User's id
@@ -21,13 +20,6 @@ properties:
     type: string
     format: email
     example: 'example@mail.com'
-  password:
-    description: User's password
-    type: string
-    minLength: 8
-    maxLength: 30
-    pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,30}$'
-    example: 'pCVVJHbCsY57+'
   createdAt:
     description: User's creation date
     type: string

@@ -1,8 +1,8 @@
 tags:
   - Contacts
-summary: Delete Contact
+summary: Delete contact
 operationId: deleteContact
-description: 'Delete contact by contactId'
+description: Permanently delete a contact by its ID. Contact must belong to the authenticated user.
 security:
   - bearerAuth: []
 parameters:
@@ -11,10 +11,12 @@ parameters:
     required: true
     schema:
       type: string
+      pattern: '^[0-9a-fA-F]{24}$'
       example: '67cece57cf044b5afacf7749'
+    description: MongoDB ObjectId of the contact to delete
 responses:
   '204':
-    description: No Content
+    description: Contact successfully deleted (no content returned)
   '401':
     $ref: ../../../components/responses/401.yaml
   '404':

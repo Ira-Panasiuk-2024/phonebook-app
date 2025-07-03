@@ -5,25 +5,40 @@ operationId: login
 description: 'Log In with provided credentials'
 security: []
 requestBody:
+  required: true
   content:
     application/json:
       schema:
+        type: object
         required:
           - email
           - password
         properties:
           email:
             type: string
+            format: email
             example: 'example@mail.com'
+            description: 'User email address'
           password:
             type: string
-            example: 'pCVVJHbCsY57'
+            example: 'pCVVJHbCsY57+'
+            description: 'User password. Must contain at least one uppercase letter, one lowercase letter, one number, and one special character.'
+            minLength: 8
+            maxLength: 30
+            pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,30}$'
 responses:
   '200':
-    description: "Log In into user's account"
+    description: 'User successfully logged in'
+    headers:
+      Set-Cookie:
+        description: 'Session cookies (refreshToken and sessionId)'
+        schema:
+          type: string
+          example: 'refreshToken=abc123; sessionId=def456; HttpOnly; Secure; SameSite=Lax'
     content:
       application/json:
         schema:
+          type: object
           required:
             - status
             - message
@@ -31,22 +46,23 @@ responses:
           properties:
             status:
               type: integer
-              example: '200'
+              example: 200
             message:
               type: string
               example: 'Successfully logged in an user!'
             data:
               type: object
               required:
-                - name
                 - accessToken
+                - user
               properties:
-                name:
-                  type: string
-                  example: 'John Doe'
                 accessToken:
                   type: string
                   example: 'FZ5lUcIf02vxG4jLikawUhFHm2SwUdX5J4ChyJSZQ2sUJYShhEBPmdKF3EUCHtSx'
+                  description: 'Access token for API requests'
+                user:
+                  type: object
+                  $ref: ../../components/schemas/userPublic.yaml
   '400':
     $ref: '../../components/responses/400.yaml'
   '401':

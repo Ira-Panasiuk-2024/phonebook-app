@@ -7,49 +7,58 @@ required:
   - userId
 properties:
   _id:
-    description: Contact's id
+    description: Contact's unique identifier
     type: string
-    example: 67cece57cf044b5afacf7749
+    format: objectId
+    example: '67cece57cf044b5afacf7749'
   userId:
-    description: Contact's user id
+    description: ID of the user who owns this contact
     type: string
-    example: 67cd81343b84f810f27e521f
+    format: objectId
+    example: '67cd81343b84f810f27e521f'
   name:
-    description: Contact's name
+    description: Contact's full name
     type: string
+    minLength: 3
+    maxLength: 20
     example: 'John Doe'
   phoneNumber:
-    description: Contact's phone number
+    description: Contact's phone number (Ukrainian format)
     type: string
-    example: '+380000000004'
+    pattern: '^(\+380|380)[0-9]{9}$'
+    example: '+380671234567'
   email:
-    description: Contact's email
+    description: Contact's email address
     type: string
-    example: 'example@mail.com'
+    format: email
+    example: 'john.doe@example.com'
   isFavourite:
-    description: Whether the contact is marked as a favorite
+    description: Whether the contact is marked as favourite
     type: boolean
-    example: false
     default: false
+    example: false
   contactType:
-    description: Contact's type
+    description: Contact's category/type
     type: string
     enum: ['work', 'home', 'personal']
-    example: personal
-    default: personal
+    default: 'personal'
+    example: 'personal'
   photo:
-    description: Link to contact's photo
+    description: URL to contact's photo (local upload or Cloudinary)
     type: string
+    format: uri
     example: 'https://res.cloudinary.com/dlejcfotr/image/upload/v1743263889/cl4t7hdyrzxbzxhqeh5i.jpg'
-    # Example with local file path:
-    # example: "http://localhost:9393/auth/uploads/1743264785038_avatar.jpg"
+    # Alternative example for local uploads:
+    # example: "http://localhost:9393/uploads/1743264785038_avatar.jpg"
   createdAt:
-    description: Contact's creation date
+    description: Contact creation timestamp
     type: string
     format: date-time
-    example: '2025-04-01T00:00:00.000Z'
+    example: '2025-01-26T14:30:00.000Z'
+    readOnly: true
   updatedAt:
-    description: Contact's last update date
+    description: Contact last modification timestamp
     type: string
     format: date-time
-    example: '2025-04-01T00:00:00.000Z'
+    example: '2025-01-26T14:30:00.000Z'
+    readOnly: true

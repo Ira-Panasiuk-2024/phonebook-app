@@ -4,12 +4,32 @@ summary: Refresh user session
 operationId: refreshSession
 description: Refreshing user session taking the token from cookies
 security: []
+parameters:
+  - in: cookie
+    name: sessionId
+    required: true
+    schema:
+      type: string
+    description: 'Session ID cookie'
+  - in: cookie
+    name: refreshToken
+    required: true
+    schema:
+      type: string
+    description: 'Refresh token cookie'
 responses:
   '200':
-    description: 'Successful refreshing'
+    description: 'Session successfully refreshed'
+    headers:
+      Set-Cookie:
+        description: 'New session cookies (refreshToken and sessionId)'
+        schema:
+          type: string
+          example: 'refreshToken=xyz789; sessionId=uvw012; HttpOnly; Secure; SameSite=Lax'
     content:
       application/json:
         schema:
+          type: object
           required:
             - status
             - message
@@ -17,22 +37,23 @@ responses:
           properties:
             status:
               type: integer
-              example: '200'
+              example: 200
             message:
               type: string
               example: 'Successfully refreshed a session!'
             data:
               type: object
               required:
-                - name
                 - accessToken
+                - user
               properties:
-                name:
-                  type: string
-                  example: 'John Doe'
                 accessToken:
                   type: string
                   example: 'FZ5lUcIf02vxG4jLikawUhFHm2SwUdX5J4ChyJSZQ2sUJYShhEBPmdKF3EUCHtSx'
+                  description: 'New access token for API requests'
+                user:
+                  type: object
+                  $ref: ../../components/schemas/userPublic.yaml
   '401':
     $ref: '../../components/responses/401.yaml'
     description: 'Session not found'

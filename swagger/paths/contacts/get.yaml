@@ -2,7 +2,7 @@ tags:
   - Contacts
 summary: Get list of contacts
 operationId: getContacts
-description: Get list of user's contacts with pagination, sorting, filtering and search
+description: Get paginated list of user's contacts with sorting, filtering and search functionality
 security:
   - bearerAuth: []
 parameters:
@@ -12,6 +12,7 @@ parameters:
       type: integer
       example: 1
       minimum: 1
+      default: 1
     description: Page number for pagination
   - in: query
     name: perPage
@@ -20,6 +21,7 @@ parameters:
       example: 10
       minimum: 1
       maximum: 100
+      default: 10
     description: Number of items per page
   - in: query
     name: sortOrder
@@ -43,30 +45,30 @@ parameters:
           'updatedAt',
         ]
       default: 'phoneNumber'
-      example: 'contactType'
-    description: Field to sort by. Default value - phoneNumber
+      example: 'name'
+    description: Field to sort by
   - in: query
     name: isFavourite
     schema:
       type: boolean
       example: false
-    description: Filter contacts by isFavourite field value
+    description: Filter contacts by favourite status
   - in: query
     name: contactType
     schema:
       type: string
       enum: ['work', 'home', 'personal']
-      example: 'home'
+      example: 'work'
     description: Filter contacts by contact type
   - in: query
     name: query
     schema:
       type: string
       example: 'John'
-    description: Search query to filter contacts by name, phone number, or email
+    description: Search query to filter contacts by name, phone number, or email (case-insensitive)
 responses:
   '200':
-    description: 'Successfully found contacts!'
+    description: Successfully found contacts!
     content:
       application/json:
         schema:
@@ -96,7 +98,7 @@ responses:
                 data:
                   type: array
                   items:
-                    $ref: ../../components/schemas/contacts.yaml
+                    $ref: '../../components/schemas/contacts.yaml'
                 page:
                   type: integer
                   example: 1
@@ -107,11 +109,11 @@ responses:
                   description: Number of items per page
                 totalItems:
                   type: integer
-                  example: 10
+                  example: 25
                   description: Total number of contacts
                 totalPages:
                   type: integer
-                  example: 15
+                  example: 3
                   description: Total number of pages
                 hasNextPage:
                   type: boolean

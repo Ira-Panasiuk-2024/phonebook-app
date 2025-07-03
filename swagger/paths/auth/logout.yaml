@@ -1,14 +1,32 @@
 tags:
   - Auth
-summary: Log Out User
+summary: User logout
 operationId: logout
-description: 'Log Out from account.'
+description: 'User logout from account'
 security: []
+parameters:
+  - in: cookie
+    name: sessionId
+    required: false
+    schema:
+      type: string
+    description: 'Session ID cookie'
+  - in: cookie
+    name: refreshToken
+    required: false
+    schema:
+      type: string
+    description: 'Refresh token cookie'
 responses:
   '204':
-    description: 'No content'
+    description: 'User successfully logged out'
+    headers:
+      Set-Cookie:
+        description: 'Cleared session cookies'
+        schema:
+          type: string
+          example: 'refreshToken=; sessionId=; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   '401':
     $ref: '../../components/responses/401.yaml'
-    description: 'User is not authenticated'
   '500':
     $ref: '../../components/responses/500.yaml'

@@ -1,8 +1,8 @@
 tags:
   - Contacts
-summary: Update Contact
+summary: Update contact
 operationId: updateContact
-description: Update contact with provided data
+description: Update an existing contact with provided data. Only provided fields will be updated.
 security:
   - bearerAuth: []
 parameters:
@@ -11,33 +11,42 @@ parameters:
     required: true
     schema:
       type: string
+      pattern: '^[0-9a-fA-F]{24}$'
       example: '67cece57cf044b5afacf7749'
+    description: MongoDB ObjectId of the contact to update
 requestBody:
+  required: true
   content:
     multipart/form-data:
       schema:
         type: object
         properties:
           name:
-            description: 'Contact`s name'
+            description: Contact's name
             type: string
             example: 'John Doe'
+            minLength: 3
+            maxLength: 20
           phoneNumber:
-            description: 'Contact`s phone number'
+            description: Contact's phone number
             type: string
             example: '+380000000004'
+            pattern: '^(\+380|380)[0-9]{9}$'
           email:
-            description: 'Contact`s email'
+            description: Contact's email address
             type: string
-            example: 'example@mail.com'
+            format: email
+            example: 'john.doe@example.com'
           isFavourite:
-            description: 'Whether the contact is marked as a favorite'
+            description: Whether the contact is marked as favourite
             type: boolean
             example: false
+            default: false
           contactType:
-            description: 'Contact`s type'
+            description: Contact's type/category
             type: string
             enum: ['work', 'home', 'personal']
+            example: 'personal'
           photo:
             description: 'Link to contact`s photo'
             format: binary
@@ -45,10 +54,11 @@ requestBody:
             example: 'https://res.cloudinary.com/dlejcfotr/image/upload/v1743263889/cl4t7hdyrzxbzxhqeh5i.jpg'
 responses:
   '200':
-    description: 'Update a contact'
+    description: Successfully updated contact
     content:
       application/json:
         schema:
+          type: object
           required:
             - status
             - message
@@ -61,7 +71,7 @@ responses:
               type: string
               example: 'Successfully patched a contact!'
             data:
-              $ref: ../../../components/schemas/contacts.yaml
+              $ref: '../../../components/schemas/contacts.yaml'
   '400':
     $ref: ../../../components/responses/400.yaml
   '401':
