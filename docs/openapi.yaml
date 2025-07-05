@@ -44,7 +44,13 @@ paths:
       $ref: ../swagger/paths/auth/refreshUserSession.yaml
 
 components:
+  schemas:
+    userPublic:
+      $ref: ../swagger/components/schemas/userPublic.yaml
+    contacts:
+      $ref: ../swagger/components/schemas/contacts.yaml
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT

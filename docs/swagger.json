@@ -927,13 +927,50 @@
     }
   },
   "components": {
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    },
     "schemas": {
+      "userPublic": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "email"
+        ],
+        "properties": {
+          "_id": {
+            "description": "User's id",
+            "type": "string",
+            "format": "objectId",
+            "example": "67cd81343b84f810f27e521f"
+          },
+          "name": {
+            "description": "User's name",
+            "type": "string",
+            "example": "John Doe",
+            "minLength": 3,
+            "maxLength": 20
+          },
+          "email": {
+            "description": "User's email",
+            "type": "string",
+            "format": "email",
+            "example": "example@mail.com"
+          },
+          "createdAt": {
+            "description": "User's creation date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-01T00:00:00.000Z",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "description": "User's last update date",
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-01T00:00:00.000Z",
+            "readOnly": true
+          }
+        }
+      },
       "contacts": {
         "type": "object",
         "required": [
@@ -1013,49 +1050,13 @@
             "readOnly": true
           }
         }
-      },
-      "userPublic": {
-        "type": "object",
-        "required": [
-          "_id",
-          "name",
-          "email"
-        ],
-        "properties": {
-          "_id": {
-            "description": "User's id",
-            "type": "string",
-            "format": "objectId",
-            "example": "67cd81343b84f810f27e521f"
-          },
-          "name": {
-            "description": "User's name",
-            "type": "string",
-            "example": "John Doe",
-            "minLength": 3,
-            "maxLength": 20
-          },
-          "email": {
-            "description": "User's email",
-            "type": "string",
-            "format": "email",
-            "example": "example@mail.com"
-          },
-          "createdAt": {
-            "description": "User's creation date",
-            "type": "string",
-            "format": "date-time",
-            "example": "2025-04-01T00:00:00.000Z",
-            "readOnly": true
-          },
-          "updatedAt": {
-            "description": "User's last update date",
-            "type": "string",
-            "format": "date-time",
-            "example": "2025-04-01T00:00:00.000Z",
-            "readOnly": true
-          }
-        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     },
     "responses": {
